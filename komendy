@@ -1,0 +1,9 @@
+git status
+git clean
+git clean -n // jakie pliki mozna wylaczyc
+git clean -nd // kompletna lista elementow ktore mozna usunac
+git clean -idf //katalgoi i ktroe pliki usunac -> i wybrac co usuwamy co wczesniej nie zostalo dodane do gita , nie da sie przywrocic
+git add //dodawanie pliku do kolejki oczekiwania
+git reset //usuwa plik z kolejki oczekiwania 
+git-checkout // usuwa wszystkie zmiany ktore zostaly wprowadzone
+git rm //usuwa pliki z repozytorium //jest mozliwe odwrocenie 
