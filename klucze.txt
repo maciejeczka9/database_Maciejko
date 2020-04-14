@@ -1,0 +1,18 @@
+zad1
+
+id_produktu -> nazwa_produktu, cena_produktu, VAT
+id_klienta -> nawa_klienta, data_zamowienia, ilosc
+ilosc -> suma_brutto, suma_netto
+VAT -> suma_netto
+
+zad2 klucze kandydujace
+id_klienta,id_produktu
+
+zad3
+id_pomieszczenia -> numer_pomieszczenia,powierzchnia, id_budynku, liczba_okien,liczba_drzwi,miasto,ulica,kod_pocztowy
+id_budynku -> ulica,miasto,kod_pocztowy
+miasto <- kod_pocztowy
+ulica <- miasto, kod_pocztowy
+
+klucze kandydujace
+id_pomieszczenia, numer_pomieszczenia+id_budynku
