@@ -1,0 +1,41 @@
+a) --Zmodyfikuj numer telefonu w tabeli pracownicy, dodając do niego kierunkowy dla Polski w nawiasie (+48)
+UPDATE ksiegowosc.pracownicy kp SET telefon='(+48)'||kp.telefon
+b)-- Zmodyfikuj atrybut telefon w tabeli pracownicy tak, aby numer oddzielony był myślnikami wg wzoru: ‘555-222-333’
+UPDATE ksiegowosc.pracownicy kp SET telefon=SUBSTRING(kp.telefon,1,8)
+||'-'||SUBSTRING(kp.telefon,9,3)||'-'||SUBSTRING(kp.telefon,12,3)
+c) --Wyświetl dane pracownika, którego nazwisko jest najdłuższe, używając dużych liter
+SELECT upper(kp.imie), upper(kp.nazwisko), upper(kp.adres), upper(kp.telefon), length(kp.nazwisko) 
+FROM ksiegowosc.pracownicy kp 
+ORDER BY length(kp.nazwisko) DESC 
+LIMIT 1
+d) --Wyświetl dane pracowników i ich pensje zakodowane przy pomocy algorytmu md5
+ALTER TABLE ksiegowosc.pensja ALTER COLUMN kwota TYPE VARCHAR(15);
+SELECT kp.*, MD5(kpen.kwota) as md5_kwota FROM ksiegowosc.pracownicy kp 
+JOIN ksiegowosc.wynagrodzenie kw ON kw.id_pracownika = kp.id_pracownika 
+JOIN ksiegowosc.pensja kpen ON kw.id_pensji = kpen.id_pensji 
+e) --Wyświetl pracowników, ich pensje oraz premie. Wykorzystaj złączenie lewostronne.
+SELECT kp.imie,kp.nazwisko, kpen.kwota, kpr.kwota FROM
+ksiegowosc.wynagrodzenie kw 
+LEFT JOIN ksiegowosc.pracownicy kp
+ON kp.id_pracownika = kw.id_pracownika
+LEFT JOIN ksiegowosc.premia kpr
+ON kpr.id_premii = kw.id_premii
+LEFT JOIN ksiegowosc.pensja kpen
+ON kpen.id_pensji=kw.id_pensji
+f) --wygeneruj raport (zapytanie), które zwróci w wyniki treść wg poniższego szablonu:
+--Pracownik Jan Nowak, w dniu 7.08.2017 otrzymał pensję całkowitą na kwotę 7540 zł, gdzie wynagrodzenie zasadnicze wynosiło: 5000 zł, premia: 2000 zł, nadgodziny: 540 zł
+SELECT CONCAT('Pracownik',kp.imie,kp.nazwisko,', w dniu',
+kg.data,'otrzymał pensję całkowitą na kwotę',COALESCE(kpr.kwota,0)+COALESCE(kpen.kwota,0),
+', gdzie wynagrodzenie zasadnicze wynosiło: ',kpen.kwota,
+', nadgodziny: ',kpr.kwota) AS Informacja
+FROM ksiegowosc.wynagrodzenie kw 
+JOIN ksiegowosc.pensja kpen ON kw.id_pensji = kpen.id_pensji
+JOIN ksiegowosc.premia kpr ON kw.id_premii = kpr.id_premii 
+JOIN ksiegowosc.pracownicy kp ON kw.id_pracownika = kp.id_pracownika
+JOIN ksiegowosc.godziny kg ON kp.id_pracownika = kp.id_pracownika
+
+
+
+ALTER TABLE ksiegowosc.pracownicy 
+MODIFY to_char(telefon,'999-999-999')
+
