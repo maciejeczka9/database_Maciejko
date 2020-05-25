@@ -24,15 +24,15 @@ LEFT JOIN ksiegowosc.pensja kpen
 ON kpen.id_pensji=kw.id_pensji
 f) --wygeneruj raport (zapytanie), które zwróci w wyniki treść wg poniższego szablonu:
 --Pracownik Jan Nowak, w dniu 7.08.2017 otrzymał pensję całkowitą na kwotę 7540 zł, gdzie wynagrodzenie zasadnicze wynosiło: 5000 zł, premia: 2000 zł, nadgodziny: 540 zł
-SELECT CONCAT('Pracownik',kp.imie,kp.nazwisko,', w dniu',
-kg.data,'otrzymał pensję całkowitą na kwotę',COALESCE(kpr.kwota,0)+COALESCE(kpen.kwota,0),
+SELECT CONCAT('Pracownik ', kp.imie, ' ',kp.nazwisko,', w dniu ',
+kg.data,' otrzymał pensję całkowitą na kwotę ',COALESCE(kpr.kwota,0)+COALESCE(kpen.kwota,0),
 ', gdzie wynagrodzenie zasadnicze wynosiło: ',kpen.kwota,
 ', nadgodziny: ',kpr.kwota) AS Informacja
 FROM ksiegowosc.wynagrodzenie kw 
-JOIN ksiegowosc.pensja kpen ON kw.id_pensji = kpen.id_pensji
-JOIN ksiegowosc.premia kpr ON kw.id_premii = kpr.id_premii 
-JOIN ksiegowosc.pracownicy kp ON kw.id_pracownika = kp.id_pracownika
-JOIN ksiegowosc.godziny kg ON kg.id_pracownika = kp.id_pracownika
+LEFT JOIN ksiegowosc.pensja kpen ON kw.id_pensji = kpen.id_pensji
+LEFT JOIN ksiegowosc.premia kpr ON kw.id_premii = kpr.id_premii 
+LEFT JOIN ksiegowosc.pracownicy kp ON kw.id_pracownika = kp.id_pracownika
+LEFT JOIN ksiegowosc.godziny kg ON kg.id_pracownika = kp.id_pracownika
 
 
 
