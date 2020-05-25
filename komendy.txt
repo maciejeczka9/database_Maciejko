@@ -32,7 +32,7 @@ FROM ksiegowosc.wynagrodzenie kw
 JOIN ksiegowosc.pensja kpen ON kw.id_pensji = kpen.id_pensji
 JOIN ksiegowosc.premia kpr ON kw.id_premii = kpr.id_premii 
 JOIN ksiegowosc.pracownicy kp ON kw.id_pracownika = kp.id_pracownika
-JOIN ksiegowosc.godziny kg ON kp.id_pracownika = kp.id_pracownika
+JOIN ksiegowosc.godziny kg ON kg.id_pracownika = kp.id_pracownika
 
 
 
