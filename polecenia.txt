@@ -1,0 +1,24 @@
+#zad1 w CMD
+
+-- robienie backupu bazy danych
+cd C:\Program Files\PostgreSQL\12\bin
+pg_dump -U postgres -Fc firma2 > magda.sql
+
+-- przywracanie bazy danych 
+cd C:\Program Files\PostgreSQL\12\bin
+pg_restore -U postgres -d firma2 "C:\Program Files\PostgreSQL\12\bin\magda.sql"
+
+#zad2
+--pełny backup
+BACKUP DATABASE AdventureWorks2017
+ TO DISK = 'D:\dokumenty Magdy\studia\4sem\BD\cw9\AW17.bak'
+    WITH FORMAT;
+
+--backup shematu HumanResources
+GO
+#zad3
+-- tworzenie widoku
+CREATE VIEW loginy_dep AS SELECT hmd.Name, hme.LoginID FROM AdventureWorks2017.HumanResources.Department hmd, 
+AdventureWorks2017.HumanResources.EmployeeDepartmentHistory hmedh, AdventureWorks2017.HumanResources.Employee hme 
+WHERE hmd.DepartmentID=hmedh.DepartmentID AND hme.BusinessEntityID = hmedh.BusinessEntityID
+
