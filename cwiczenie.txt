@@ -1,0 +1,72 @@
+#1
+BEGIN
+SELECT AVG(HREPR.Rate) AS STAWKA FROM AdventureWorks2017.HumanResources.EmployeePayHistory HREPR;
+SELECT HRE.*, HREPR.Rate FROM AdventureWorks2017.HumanResources.EmployeePayHistory HREPR, AdventureWorks2017.HumanResources.Employee HRE 
+WHERE HREPR.BusinessEntityID=HRE.BusinessEntityID AND HREPR.Rate < (SELECT AVG(HREPR.Rate) FROM AdventureWorks2017.HumanResources.EmployeePayHistory HREPR)
+END;
+
+#2
+-- CREATE FUNCTION data_zam(@data DATE)
+-- RETURNS TABLE AS
+-- RETURN(
+--	SELECT SSOH.ShipDate as data_zamowienia FROM AdventureWorks2017.Sales.SalesOrderHeader SSOH, AdventureWorks2017.Sales.SalesOrderDetail SSOD 
+-- WHERE SSOH.SalesOrderID=SSOD.SalesOrderID AND SSOH.ShipDate=@data);
+
+CREATE FUNCTION data_zam(@nr INT)
+RETURNS TABLE AS
+RETURN(
+	SELECT SSOH.ShipDate as data_zamowienia FROM AdventureWorks2017.Sales.SalesOrderHeader SSOH
+WHERE SSOH.SalesOrderID = @nr
+);
+
+np. SELECT *FROM data_zam(43663)
+-- SELECT *FROM data_zam('2011-06-12 00:00:00.000')
+
+#3
+
+CREATE PROCEDURE info_produkt @produkt nvarchar(50) -- parametr wejsciowy
+
+AS BEGIN
+SELECT PP.ProductID, PP.ProductNumber, PP.SellEndDate FROM  AdventureWorks2017.Production.Product PP 
+WHERE PP.Name=@produkt;
+END;
+
+np. 
+EXEC info_produkt @produkt='LL Bottom Bracket'
+
+#4
+CREATE FUNCTION karta_kred(
+	@zamowienie  INT
+)
+RETURNS TABLE AS
+RETURN (
+SELECT SCC.CardNumber FROM AdventureWorks2017.Sales.CreditCard SCC
+INNER JOIN AdventureWorks2017.Sales.SalesOrderHeader SSOH 
+ON SCC.CreditCardID = SSOH.CreditCardID 
+AND @zamowienie = SSOH.SalesOrderID);
+
+np. SELECT *FROM karta_kred(43663)
+
+#5
+
+CREATE PROCEDURE dzielenie
+(@num1 INT =1 , 
+@num2 INT = 1)
+AS
+DECLARE @wynik FLOAT;
+DECLARE @blad AS NVARCHAR(500);
+
+IF @num1 < @num2 
+BEGIN
+	SET @blad = 'Niewłaściwie zdefiniowałeś dane wejściowe';
+	RAISERROR(@blad,16,1);
+	RETURN;
+END;
+ELSE 
+BEGIN
+	SET @wynik = @num1/@num2;
+	SELECT @wynik as iloraz;
+	RETURN;
+END;
+
+np. EXEC dzielenie @num1=6,@num2=3
