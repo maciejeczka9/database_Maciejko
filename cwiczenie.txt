@@ -1,0 +1,59 @@
+#zad1
+CREATE PROCEDURE Fib
+(
+@element INT
+)
+
+AS 
+DECLARE @lfib INT=0;
+DECLARE @l1 INT=0;
+DECLARE @l2 INT=1;
+DECLARE @pom INT;
+
+IF @element = 1
+BEGIN
+ SET @lfib=0 ;
+END;
+ELSE 
+BEGIN
+	WHILE @element-1 > 1
+	BEGIN
+	 SET @lfib = @l1 + @l2;
+	 SET @l1 = @l2;
+	 SET @l2 = @lfib;
+	 SET @element = @element-1;
+	END;
+END;
+SELECT @lfib as Ciag_Fib;
+RETURN;
+
+np.
+EXEC Fib @element = 4
+
+#zad2
+CREATE  TRIGGER trigging ON AdventureWorks2017.Person.Person 
+FOR UPDATE AS
+UPDATE Person SET LastName=upper(LastName)
+
+np. UPDATE AdventureWorks2017.Person.Person SET FirstName='Ken' WHERE MiddleName='A'
+
+#zad3
+CREATE TRIGGER taxRateMonitoring ON AdventureWorks2017.Sales.SalesTaxRate
+AFTER UPDATE AS
+BEGIN
+SET NOCOUNT ON;
+ DECLARE @nowa FLOAT;
+ DECLARE @stara FLOAT;
+ SELECT @nowa = TaxRate FROM inserted
+ SELECT @stara = TaxRate FROM deleted
+ 
+ IF ((@nowa > @stara + 0.3* @stara) OR (@nowa < @stara - 0.3* @stara))
+  BEGIN
+     print 'blad'
+     ROLLBACK
+     RETURN
+  END;
+ END;
+
+np.
+UPDATE AdventureWorks2017.Sales.SalesTaxRate SET TaxRate='4' WHERE SalesTaxRateID=4
